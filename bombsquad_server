@@ -1,5 +1,4 @@
-﻿#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
 # NOTE TO SELF - this script supports python 3; should test that occasionally
 # and eventually switch to it completely (perhaps when the game itself does)
 from __future__ import print_function
@@ -38,8 +37,7 @@ if binary_path is None:
 config = {}
 
 # Name of our server in the public parties list
-#config['partyName'] = 'bolt server'
-config['partyName'] = u'FFA'
+config['partyName'] = 'FFA'
 
 # If True, your party will show up in the global public party list
 # Otherwise it will still be joinable via LAN or connecting by IP address
@@ -62,7 +60,7 @@ config['language'] = 'English'
 # multiple controllers. Also, this number currently includes the server so
 # generally make it 1 bigger than you need. Max-players is not currently
 # exposed but I'll try to add that soon.
-config['maxPartySize'] = 12
+config['maxPartySize'] = 6
 
 # Options here are 'ffa' (free-for-all) and 'teams'
 # this value is only used if you do not supply a playlistCode (see below);
@@ -72,7 +70,7 @@ config['sessionType'] = 'ffa'
 # To host your own custom playlists, use the 'share' functionality in the
 # playlist editor in the regular version of the game.
 # This will give you a numeric code you can enter here to host that playlist.
-config['playlistCode'] = 319531
+config['playlistCode'] = None
 
 # Whether to shuffle the playlist or play its games in designated order
 config['playlistShuffle'] = True
@@ -112,9 +110,12 @@ config['ffaSeriesScoreToWin'] = 24
 # currently-signed-in account's id.  To get info about an account,
 # you can use the following url:
 # http://bombsquadgame.com/accountquery?id=ACCOUNT_ID_HERE
-config['statsURL'] = 'https://discord.gg/saU23hv'
+config['statsURL'] = ''
 
 # If config.py exists, run it to apply any overrides it wants..
+if os.path.isfile(config_path):
+    exec (compile(open(config_path).read(), config_path, 'exec'))
+
 # launch a thread to read our stdin for commands; this lets us modify the
 # server as it runs
 input_commands = []
@@ -143,7 +144,7 @@ restart_server = True
 
 # the server-binary will get relaunched after this amount of time
 # (combats memory leaks or other cruft that has built up)
-restart_minutes = 180
+restart_minutes = 360
 
 # a bit of environment cleanup
 del __builtins__.exit
@@ -175,11 +176,9 @@ while restart_server:
     f.write(json.dumps(bscfg))
     f.close()
 
-
     # launch our binary and grab its stdin; we'll use this to feed it commands
     result = subprocess.Popen(
         [binary_path, '-cfgdir', 'bscfg'], stdin=subprocess.PIPE)
-    stdin = result.stdin
 
     # set quit to True any time after launching the server to gracefully quit it
     # at the next clean opportunity (end of the current series, etc)
@@ -196,13 +195,7 @@ while restart_server:
         for c in input_commands:
             old_config = copy.deepcopy(config)
             try:
-		if True:
-			stdin.write('exec("%s")'%str(c))
-			stdin.write("# coding=utf-8\nimport weakref\na = bs.getActivity()\nactivity = weakref.ref(a)\n" + "del(a)\n")
-			stdin.flush()
-			print('success')
-		else:
-                	exec (c)
+                exec (c)
             except Exception:
                 traceback.print_exc()
             if config != old_config:
@@ -234,6 +227,7 @@ while restart_server:
 
         code = result.poll()
         if code is not None:
+            print('BombSquad exited with code ' + str(code))
             break
 
         time.sleep(1)
