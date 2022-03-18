@@ -13,7 +13,7 @@ Scripts by venom
 
 # Getting Started
 
-● git clone https://github.com/Ayushssss/venom-scripts.git
+● ```git clone https://github.com/Ayushssss/venom-scripts.git```
 
 ● ```chmod 777 bs_headless```
 
