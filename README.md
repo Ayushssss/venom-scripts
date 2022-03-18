@@ -15,7 +15,7 @@ Scripts by venom
 
 ● ```chmod 777 bs_headless```
 
-● ```chmod 777 bombsquad_server
+● ```chmod 777 bombsquad_server```
 
 ● ```./bombsquad_server``` 
 
@@ -29,3 +29,7 @@ to run your server
 ● if your on a pc 
 
 ● ```CTRL + C```
+
+# credits
+
+● VENOM its me
