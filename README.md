@@ -7,9 +7,9 @@ Scripts by venom
 
 # Installation
 
-● ```sudo apt-get install python libsdl2-2.0-0 libpython2.7  --
+● ```sudo apt-get install python libsdl2-2.0-0 libpython2.7  --```
 
-confirm by putting Y```
+```confirm by putting Y```
 
 # Getting Started
 
